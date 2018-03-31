@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[Spring Cloud分布式微服务实践]]></title>
+    <url>%2Fspringcloud%2F</url>
+    <content type="text"><![CDATA[Spring Cloud微服务框架Spring Cloud是基于Netflix等公司大量的微服务实践，封装出的一整套微服务开发框架，主要包括微服务网关、配置中心、服务注册发现、远程调用、负载均衡、消息总线、容错断路、监控追踪等模块，为开发高可用、高可扩展性的分布式应用提供了一套易用的解决方案。Spring Cloud的微服务组件基于Spring Boot开发，可以说Spring Boot是Spring Cloud的基石。Spring Boot通过自动配置等功能极大地简化了Spring应用的开发，提升了开发效率，同时支持内嵌Tomcat（以及Jetty、Undertow）等Servlet容器，打包部署更加方便。前不久刚刚发布了SpringBoot 2.0版本，该版本最大特点是将响应式编程作为首选的编程范式，支持WebFlux、RxJava，更易于实现异步和事件驱动，创建完全非阻塞式应用。分布式微服务实践这里我们基于Spring Cloud开发一个分布式应用，主要用到Config配置中心，Eureka服务注册发现，Feign做服务调用，Zuul微服务网关，Ribbon负载均衡， Hystrix服务容错保护，Admin服务管控，Zipkin服务追踪，具体包括以下几个微服务：注册中心 eureka-server启动应用后，打开 http://localhost:8761 可以看到启动的服务实例配置中心 config-server该服务将git仓库中的配置文件以接口形式提供，客户端可以获取并加载配置。例如获取eureka配置信息，打开 http://localhost:3600/eureka/default123456789101112131415161718192021&#123; "name": "eureka", "profiles": [ "default" ], "label": null, "version": "a716ea609caaa0811387bcc616227b42e6094b26", "state": null, "propertySources": [ &#123; "name": "https://github.com/yunTerry/spring-cloud-netflix/config-repo/eureka.yml", "source": &#123; "spring.application.name": "eureka-server", "server.port": 8761, "eureka.client.register-with-eureka": false, "eureka.client.fetch-registry": false, "management.security.enabled": false &#125; &#125; ]&#125;微服务网关 zuul用serviceId代替URL，实现动态路由。通过Zuul过滤器进行请求鉴权，拦截不合法请求，同时也可以实现API限流等操作。服务提供者 token-servicetoken认证服务，提供生成token和验证token的接口12345@GetMapping("/token/generate/&#123;uid&#125;")String getToken(@PathVariable String uid);@GetMapping("/token/verify")boolean verify(@RequestParam String token);服务消费者 user-service调用用户相关服务的时候，会消费token认证服务，使用Feign调用服务，通过Hystrix提供容错保护向 http://localhost:4000/user-service/login 发POST请求登录或注册成功返回token12345&#123; "code": 0, "msg": "login success", "data": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NjVhNWEyYy1hYzhhLTQxNDctYjI2Yy0zNTFlYTA0NjI4OGEiLCJleHAiOjE1MjA1OTMzODF9.NMUjrRk7MsAROuq1OLOUM9WOefgkZmg5_M_mjiSVa0Cz-SunY2ucgxEvOGdKW7U1AVteNVVtD1v_cQlwA_wREQ"&#125;把token放在请求头，获取用户信息 http://localhost:4000/user-service/user/info1234567891011&#123; "code": 0, "msg": "success", "data": &#123; "id": "765a5a2c-ac8a-4147-b26c-351ea046288a", "name": "aa", "sex": "boy", "img": "http://img.com/aa32.jpg", "age": 20 &#125;&#125;服务管控 admin-server打开 http://localhost:5033进入服务管理界面，查看服务运行状态Zipkin 服务追踪在 http://localhost:5500/zipkin/ 可以查看服务链路追踪服务调用时间调用详情项目源码https://github.com/yunTerry/spring-cloud-netflix]]></content>
+      <categories>
+        <category>Spring Cloud</category>
+      </categories>
+      <tags>
+        <tag>Spring Cloud</tag>
+        <tag>SpringBoot</tag>
+        <tag>服务发现</tag>
+        <tag>微服务</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[聊聊微服务架构]]></title>
+    <url>%2Fmicroservice%2F</url>
+    <content type="text"><![CDATA[微服务是近年来比较热门的服务架构思想，本文根据个人理解聊聊微服务架构，不足之处还请指正。微服务概述微服务，顾名思义微小的服务，当传统的单体应用规模和复杂度达到一定程度的时候，应用的管理、扩展、可靠性等方面就会出现瓶颈，一个基本原则就是分而治之，把一个大的复杂应用拆分成多个小的服务，让每个小服务可以单独进行管理、扩展，微服务由此演化而来。微服务强调拆分后服务的独立性，麻雀虽小，五脏俱全，每个微服务有自己独立的数据库，有自己的业务实现，各自运行在独立的进程中，对外提供设计好的接口，服务间去耦合，通过RPC、HTTP等标准协议进行交互，服务内部功能可以使用任意语言和框架实现，对外是不可见的。微服务有点像KTV包厢，包厢之间是相互独立的，每个包厢有自己的音响、点歌机，包厢之间仅通过过道和门连通。你可以在KTV包厢里面尽情歌唱都不会影响别人，就像你可以用Java、Python、go等多种语言实现多个微服务，只要接口明确，它们都能很好地协同。微服务架构特点1、去中心化传统的单体应用只有一个服务，这个服务就是系统的中心，而微服务架构是去中心化的，把复杂的系统拆分成多个简单的分布式组件，每个组件都是服务化的，能够独立部署独立升级。除了业务逻辑去中心化，数据同样也要去中心化，微服务要有自己独有的数据库，每个服务只对自己的数据负责，也不允许直接读写别人的数据库，就像自家的资产只能自己处置，别人不能随便动。去中心化有利于降低系统内部服务冗余，使组件服务能够灵活地扩展和升级，比如有针对性地对系统某些高频组件进行扩容，就能快速提升系统并发能力，节省成本。2、专注做好一件事微服务架构的关键在于业务功能的合理拆分，以最终实现分布式系统的高内聚、低耦合，如果拆分不合理还会导致后期代码维护和功能扩展越发困难。通常架构设计时尽可能使每个微服务专注做好一件事，合理划分服务边界，使数据结构易于独立，对外接口简洁通用，一个好的设计理念就是领域驱动设计(Domain Driven Design)，根据领域的边界设计服务范畴。3、语言多样性单体应用通常只能采用单一语言开发，但每种编程语言都有各自优势，协作团队中通常每个人都有各自擅长的语言框架，单体应用限制了这种自由，而在微服务系统中没有这些限制，各个服务相互独立，每个服务都可以用不同的编程语言实现，每个人都可以发挥自己的特长。事实上，技术的多样性对一个系统的健壮性也大有裨益，除了可以发挥多种语言框架的优势，还可以逐步引入新技术，有利于系统的演进升级。4、RESTful无状态微服务架构很好地实现了服务解耦和水平扩展，服务接口做成RESTful无状态的，业务逻辑与数据分离，服务间通过RESTful API交互，这样服务实例就可以按需进行弹性伸缩。5、服务容错保护我们知道在分布式集群中，某个节点失效应被视作常态而不是意外，即节点失效是一定会发生的，必须要提前做好相应的预备措施。服务容错保护和业内常提的异地多活、Design For Failure 等思想一脉相承，就是为分布式系统的高可用所做的预备措施。微服务体系中，硬件故障、软件bug、流量洪峰等种种原因导致服务出错同样应被视作常态，由于服务间错综复杂的依赖关系，对微服务进行容错保护是很有必要的，当某个服务实例出错时及时进行降级、隔离，既能提高响应速度，还能防止请求积压造成雪崩，这对系统的高可用至关重要。当然任何系统都很难保证绝对可用，前不久就连AWS和Google Cloud都发生过服务中断事件，这在互联网系统中都是灾难性的，我们只能通过各种容错手段尽量避免此类事件发生。6、开发运维一体化开发运维一体化即流行的DevOps，谁开发的谁运维，这样开发人员能更快地响应业务需求，更好地保障服务后续运行和升级，同时避免团队间大量的无效沟通和摩擦。现在流行的各种CI/CD、自动化运维技术也在促进开发运维一体化。7、拥抱容器技术有人说容器和微服务简直是天生一对，容器的轻巧高效恰好匹配微服务的灵活多变，结合Docker容器技术和微服务架构有助于应用的持续集成、持续交付和持续部署，目前备受追捧的云原生技术就是直接把微服务构建在容器基础设施上。随着Kubernetes等容器基础设施的日趋成熟，容器逐渐成为微服务的标准载体，在容器基础设施上构建运行高可用、高可扩展的微服务将越来越简单。微服务的挑战微服务作为近年来流行的软件架构风格，它很好地实现了服务解耦和水平扩展，但微服务也会有各种挑战。应用的挑战由于微服务将整个系统进行拆分，所以系统的架构、开发工作量和复杂度会增加不少;原来的单体应用变成一系列微服务，要管理和协调这些服务，系统的运维复杂度会增加不少;原来调用的本地方法变成了服务间的远程调用，可能会使系统性能有所降低，这意味着要增加硬件投入。架构的挑战除了应用中的挑战，微服务架构本身也面临挑战，根据CAP理论，在分布式系统中数据一致性(Consistency)、服务可用性(Availability)、分区容忍性(Partition tolerance)三者不可能同时满足，最多只能实现其中两点，那么如何根据业务特点做出最佳权衡和取舍，就是微服务架构面临的挑战。孟老夫子说过鱼和熊掌不可兼得，则舍鱼而取熊掌者也。在分布式系统中，分区容忍是必须要满足的，所以一般在一致性和可用性之间进行权衡，要么舍弃部分一致性，追求高可用；要么严格强调一致性，损失部分高可用。到底是高可用重要还是一致性重要，这在服务注册中心也对应着两种流派：一种是Eureka为代表的AP流派，强调高可用，弱化一致性；另一种是CP流派，典型的就是ZooKeeper这类注册中心，更强调一致性，但会牺牲部分高可用。一种常用的折中方案就是BASE原则，它是指基本可用（Basically Available）、软状态（Soft State）和最终一致性（Eventual Consistency），也就是牺牲强一致性，获得较好的可用性，允许暂时的状态或数据不一致，只要最终一致就行了。实际应用中要根据系统对高可用和一致性等各方面的要求程度，做出适当的权衡和取舍。是否采用微服务对一个系统来讲，架构是逐步演进的，是否采用微服务架构要根据具体的团队和业务情况来定，一般来讲，如果团队规模和业务复杂度达到一定程度，单体应用已经力不从心的时候就该上微服务了。]]></content>
+      <categories>
+        <category>微服务</category>
+      </categories>
+      <tags>
+        <tag>容器</tag>
+        <tag>微服务</tag>
+        <tag>云计算</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[快速将关系数据库表转Java对象]]></title>
+    <url>%2Fsql2java%2F</url>
+    <content type="text"><![CDATA[最近用SpringBoot重构一个PHP项目，用JPA操作MySQL数据库，由于要维持原来的表结构，应用中就要把许多表转化为Java类。一般的ORM框架可以很方便地把Java类映射为关系数据库表，但这里显然是它的逆过程，这个好像没有现成的工具和框架，难道要对着表一个字段一个字段地写？要知道，数据库有几十张表，每张表都有很多字段，一个个写还真得花不少精力，而且手写还很容易出错。最好的办法当然是用程序实现自动转换了，这里我们用SQL来实现这种转换。SQL实现表转Java基本思路就是根据表名查询出列名，用concat函数拼接修饰符得到Java对象属性列表：12345678910111213141516171819202122232425select concat( 'public ', case when data_type in ('varchar', 'char', 'text') then 'String' when data_type in ('int', 'tinyint') then 'Integer' when data_type in ('bigint') then 'Long' when data_type in ('datetime') then 'Date' when data_type in ('bit', 'boolean') then 'Boolean' else '类型不确定' end, ' ', column_name, ';' ) as javafrom information_schema. columnswhere table_name = "person";运行结果就是转换好的Java对象属性了，直接复制到类中即可。封装成 MySQL 存储过程把上面SQL语句封装成存储过程，使用的时候更方便：12345678910111213141516171819202122232425262728293031-- 以表名为输入参数，输出对应的java对象属性create procedure sql2java (in t_name char(30))begin select concat( 'public ', case when data_type in ('varchar', 'char', 'text') then 'String' when data_type in ('int', 'tinyint') then 'Integer' when data_type in ('bigint') then 'Long' when data_type in ('datetime') then 'Date' when data_type in ('bit', 'boolean') then 'Boolean' else '类型不确定' end, ' ', column_name, ';' ) as java from information_schema. columns where table_name = t_name;end;调用 MySQL 存储过程，直接传入表名即可：1call sql2java('person');循环遍历所有表数据库中有很多张表，如果我们不想一次次输入表名，通过循环遍历可以一次性得到所有结果。具体做法是先查出数据库所有表名：123456SELECT table_nameFROM information_schema. TABLESWHERE table_schema = 'db_name';然后把结果集通过游标和while循环遍历所有表：123456789101112131415-- 打开游标open cur;while done do -- 获取数据 fetch cur into t_name;-- 直接调用之前的存储过程call sql2java (t_name);endwhile;-- 关闭游标close cur;最后把上面SQL语句封装成 sql2java_all 存储过程。调用存储过程，可一次性输出所有表的Java类：1call sql2java_all;此方法除了可以得到Java类，稍作修改也可以支持多语言，比如Python、PHP的类，C++、Golang 的结构体以及Protobuf 的DSL代码。本文SQL源码https://github.com/yunTerry/SQL2Java]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+        <tag>存储过程</tag>
+        <tag>ORM</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Docker Compose 轻量级容器编排]]></title>
+    <url>%2Fdocker-compose%2F</url>
+    <content type="text"><![CDATA[使用Docker Compose编排Spring Cloud分布式应用。说到容器编排，目前很火的Kubernetes就是一个自动化容器编排工具，但Kubernetes是一个重量级选手，部署比较复杂，对于简单的分布式应用，我们可以使用Docker Compose做轻量级的容器编排，实现容器间的服务注册发现和弹性伸缩。Spring Cloud分布式应用这里用Spring Cloud开发一个简单的分布式应用，该应用包含几个简单的微服务：Eureka做服务注册发现，Feign服务调用，Zuul微服务网关，Ribbon负载均衡，Hystrix服务降级/隔离。然后把微服务放在Docker容器内，用compose进行容器自动化构建和部署，实现基本的注册中心、服务调用和监控。Docker compose容器编排Docker compose是一个容器管理工具，可以很方便地构建和管理多容器应用。Docker容器内是一个封闭环境，要实现服务注册发现，需要借助Docker的link机制实现容器间通信。这里需要将其他容器都link到eureka注册中心，在docker-compose.yml中配置容器编排规则：123456789101112131415161718192021222324252627282930313233343536373839version: '3'services: eureka: build: ./eureka-server image: yunterry/eureka ports: - 8761:8761 provider: build: ./service-provider image: yunterry/service-provider ports: - 2017 links: - eureka consumer: build: ./feign-consumer image: yunterry/feign-consumer ports: - 3000 links: - eureka gateway: build: ./zuul-gateway image: yunterry/zuul-gateway ports: - 4000 links: - eureka hystrix: build: ./hystrix-turbine image: yunterry/hystrix-turbine ports: - 5000 links: - eureka为了加快构建速度，需要先编译出jar文件，再统一构建和运行：12345678# 编译SpringBootmvn clean package# 构建Docker镜像docker-compose build# 运行所有容器docker-compose up打开注册中心可以看到服务都已启动：12345# 停止所有微服务docker-compose stop# 删除所有容器docker-compose rm服务扩容微服务架构中，我们经常需要对服务进行扩容缩容，docker-compose scale 可以指定服务启动多少个实例，方便实现系统的弹性伸缩。比如要启动3个provider和两个gateway实例，执行一条命令：1docker-compose scale provider=3 gateway=2执行完成后打开注册中心，可以看到已经启动了3个provider和两个gateway实例：清理中间镜像构建镜像后，如果之前有同名镜像，会出现一些标签为空的镜像：1234567891011121314151617$ docker imagesREPOSITORY TAG IMAGE ID CREATED SIZEyunterry/service-provider latest 088d56298e08 About a minute ago 144MByunterry/feign-consumer latest 5e04a653948a About a minute ago 147MByunterry/zuul-gateway latest 160c477c3909 About a minute ago 148MByunterry/hystrix-turbine latest e61c005e7740 About a minute ago 148MByunterry/eureka latest a58a9dfdfe24 About a minute ago 148MB&lt;none&gt; &lt;none&gt; 70c9ad8823b9 2 days ago 148MB&lt;none&gt; &lt;none&gt; d331346e70a7 2 days ago 149MB&lt;none&gt; &lt;none&gt; a3dafb3c5d70 2 days ago 148MB&lt;none&gt; &lt;none&gt; e5c3078fe57c 2 days ago 145MB&lt;none&gt; &lt;none&gt; fc30ccb5ff6d 2 days ago 150MBconsul latest d686c08d0dc8 11 days ago 51.8MBnode alpine a47a5669ac57 3 weeks ago 65.3MBredis latest 1fb7b6c8c0d0 3 weeks ago 107MBmuli/gluon-tutorials-zh latest 1e80c558f4a8 5 weeks ago 2.15GBjava jre-alpine fdc893b19a14 8 months ago 108MB可以通过过滤器查看标签为空的镜像：1234567$ docker images -f "dangling=true"REPOSITORY TAG IMAGE ID CREATED SIZE&lt;none&gt; &lt;none&gt; 70c9ad8823b9 2 days ago 148MB&lt;none&gt; &lt;none&gt; d331346e70a7 2 days ago 149MB&lt;none&gt; &lt;none&gt; a3dafb3c5d70 2 days ago 148MB&lt;none&gt; &lt;none&gt; e5c3078fe57c 2 days ago 145MB&lt;none&gt; &lt;none&gt; fc30ccb5ff6d 2 days ago 150MB所以清理这些中间镜像就很简单了，取出这些标签为空的镜像ID，就可以批量删除：1docker rmi $(docker images -f "dangling=true" -q)再用docker images查看就很整洁了。项目源码https://github.com/yunTerry/Spring-Cloud-Docker]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Spring Cloud</tag>
+        <tag>Docker</tag>
+        <tag>容器</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[RESTful API使用JWT做无状态的身份认证]]></title>
+    <url>%2Frest-jwt%2F</url>
+    <content type="text"><![CDATA[JWT设计RESTful架构的前后端，天然要求API是无状态的，JWT(JSON Web Token)简单易用，适合在分布式系统中做API无状态的身份认证。jwt由Header、Payload、Signature三部分组成，使用 . 分割开，一个JWT形式：1Header.Payload.Signature这三部分分别对应的是加密算法、携带的用户信息、加密后的字符串（签名）。jwt自带签名，能够防止伪造或篡改，但要防止token被窃取还要配合https使用。下面我们用jwt开发一个前后端交互系统。JWT服务端这里使用jjwt开源库生成token：https://github.com/jwtk/jjwt创建RESTful接口Server端基于SpringBoot开发，提供生成token和校验token的接口：123456@PostMapping("/login")Back login(@RequestParam String name, @RequestParam String pwd);@GetMapping("/user")Back getUser(@RequestHeader String jwt);登录或注册接口：客户端提交用户名密码，服务端完成登录或注册逻辑，然后生成jwt令牌并返回给客户端用户信息接口：客户端将token放在请求头，服务端校验是否合法，然后再从MySQL中查询并返回用户信息服务端无需存储jwt令牌，通过特定的算法和密钥校验token，同时取出Payload中携带的用户ID，减少不必要的数据库查询本例中设置JWT有效期为3天，服务端每次都会自动校验token是否过期，如果过期就直接抛出异常，客户端需要重新申请tokenToken统一校验业务相关接口一般都需要token验证，这就应该把验证逻辑放在一个统一业务层完成，Spring的AOP正好满足这一需要。这里实现Spring的拦截器HandlerInterceptor接口，在Controller方法执行之前拦截需要鉴权的请求，验证token是否合法，合法就放行，不合法则直接抛出异常拦截请求。12345678910111213141516171819public class JwtInterceptor implements HandlerInterceptor &#123; @Override public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) &#123; //在请求处理之前校验token String token = httpServletRequest.getHeader("jwt"); return Util.verify(token); &#125; @Override public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) &#123; &#125; @Override public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) &#123; &#125;&#125;然后在WebMvcConfigurerAdapter中添加此拦截器，就可以实现Token统一校验了。服务端源码：https://github.com/yunTerry/JWT-ServerJWT客户端Android客户端使用Retrofit做REST请求。登录或注册接口：提交用户名密码，服务端返回jwt令牌：用户信息接口：客户端将token放在请求头，服务端校验通过即返回用户信息客户端在本地存储token以后就能免登陆客户端源码：https://github.com/yunTerry/JWT-AndroidJWT的缺陷JWT使用起来虽然简单方便，但它存在一个设计缺陷，即服务端无法主动注销token，所以jwt可能在安全性上不及session，实际开发中应合理设置过期时间。如果要让服务端能够注销token，就要在服务端维持token状态，但这又回到session机制了。JWT这个缺陷决定了它更适合用在短期的token验证场景中，或者也可以结合session做长短期双重验证，弥补session的一些不足。]]></content>
+      <categories>
+        <category>安全</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>安全</tag>
+        <tag>SpringBoot</tag>
+        <tag>RESTful</tag>
+        <tag>jwt</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Serverless会是一场云计算的革命吗]]></title>
+    <url>%2Fserverless%2F</url>
+    <content type="text"><![CDATA[微服务方兴未艾，Serverless横空出世。关于Serverless，网上众说纷纭，本人也是前几个月刚刚了解到Serverless，但第一次看到Serverless就感觉这就是我想要的，这应该就是云计算的未来。什么是ServerlessServerless通常被翻译成无服务器架构，它是一种事件驱动的函数级计算服务，同时也是一种极致的微服务设计，弹性伸缩能力无与伦比。Serverless平台是一种高度抽象的代码运行环境，它能直接冷启动一段逻辑代码，既简单易用又无比强大，用户无需管理服务器，仅仅写出业务逻辑代码就能即刻运行。目前Serverless的主要形态是FaaS（Function as a Service），国外有AWS Lambda、Azure Functions、Google Cloud Functions等，国内阿里云、腾讯云等都提供了FaaS函数计算服务。由于还处于很早期的阶段，毫无疑问，Serverless还有很多缺点，比如实时性不足、运行时长限制等，但相信随着技术的进步，这些问题都会逐步解决，本文只谈谈Serverless相对传统基础设施的优势，以及为什么Serverless很可能是云计算的未来趋势。一切皆因成本大学时无意中在图书馆看到一本书《问道云计算》，书中一个观点令人印象深刻，作者认为云计算就像是国家电网，通用的计算服务将会成为像电力这样的社会基础设施。现在用电很方便，牵根电线安个电表就行了，你不开电器电表就不会转，每月电表转多少度国家电网收你多少钱，这些都太平常不过了，然而这要放到云计算，简直不可思议。试想如果你家的电表换成以时间计费，你愿意么？也就是给你牵了根电线，然后不管你用没用、用多少，每时每刻都要给你计费，而且始终按最高“功率”计费，你可能会惊呼：这TM就是赤裸裸的抢劫啊！然而现在的云计算公司就是这么干的，你按CPU核数、内存、带宽买云服务，不管你用没用、用多少，每时每刻都要给你计费，而且电力功率还有限制（按你购买的CPU核数、带宽等），超出功率就给你断闸限电······但这也并不代表云计算公司多么暴利，因为它们提供的基本都是虚拟机或容器实例，但这些实例的弹性伸缩能力太差，大部分时间都在空转浪费，偶尔高峰期又力不从心，虽然它们也不想这样，但这种浪费终究还是用户买单。为此AWS很早就提供了EC2竞价实例试图提高实例的利用率，现在很多云计算公司都推出了按秒计费的云服务器，但这依然还是延续着那种粗暴的计费方式，不过是营销的套路而已，用户的使用成本依旧高昂。在所有的经济活动中，成本一定是首要考虑的因素之一，Serverless对传统云服务的颠覆就在于它极大的成本优势，它能精确地按计算量来计费，就像电表按用电量计费，与时间无关一样，避免了虚拟机、容器大量的计算资源闲置浪费，对普通用户来说，成本上可以秒杀虚拟机和容器，能够大幅降低云计算服务的价格。IT的基础设施要成为基础设施，首先是要让人放心，但目前云计算依然是一件让人操心的事情，开发部署应用时你需要考虑可扩展性、高可用性，每个服务一般都要部署多个实例，还要做服务注册发现、负载均衡、容错断路等，容器还要用Kubernetes管理集群······但对开发人员而言，他们只想专注于业务逻辑，并不想为服务器管理和运维有关的基础设施问题操心。Serverless几乎把这些IT的基础设施问题一次性解决了，Serverless天然具备高可用、完全的弹性伸缩等特点。国外的工程师给 Serverless 打出的一句口号就是：Focus on your application, not your infrastructure.云计算的门槛现在的云服务就像是早期的发电站一样，提供的是不同电压不同功率的电力，你得自己买变压器、自己去捣腾电压频率然后才能用，Serverless则是直接让国家电网给你220V 50Hz的电力，你直接插上插头就能用了。Serverless就像插座一样即插即用，极大地降低了云计算的接入使用门槛，通过FaaS加API网关基本上可以重构大部分的企业级应用。Serverless对传统的软件架构是颠覆性的，未来在Serverless平台上创建高可用、高可扩展性的微服务将是异常简单的事情，只写点业务代码就行了，你根本不用去考虑架构、扩展、并发之类的问题，因为云计算公司会用它们最优的架构和扩展来构筑Serverless的底层基础设施，使其上的应用天然具备分布式系统和微服务架构的所有优势。虽然未来云计算公司可能仍然使用Kubernetes等容器技术构建Serverless底层基础，但云计算用户可能不会再接触虚拟机和容器了，直接面向Serverless开发就行了，普通人也完全没必要花大价钱买云主机或容器服务，既麻烦又浪费。熵的转移从单机到分布式集群，从虚拟机到容器，从单体应用到微服务架构，无论IT系统如何演变，系统的复杂性都不会降低，而且还会呈指数级增加，这就像物理世界的熵增加原理一样，系统只会演变得越来越复杂和难以管理。实际中应用开发越来越简单是因为我们不断把复杂性从上层转移到下层，最终通过自动化程序把复杂性从人转移给了机器，让机器承担底层越来越复杂的重担，通过这样的复杂性转移就能不断降低IT系统的成本。Serverless对传统的IT系统架构是颠覆性的，它更彻底地把复杂性转移给了基础设施，把IT系统的熵不断转移给机器，剩下的只是业务的复杂性。重新定义云应用传统的应用都是常驻内存型，每个应用启动时都需要开辟自己的进程并常驻在CPU、内存中，这种应用不仅长时间占用硬件资源，而且启动速度很慢，例如在容器环境中，使用Java开发的微服务启动速度明显偏慢，而运行在Serverless平台上的短时间、快速启动的函数单元则具有明显优势。Serverless一个了不起的地方就是它的应用不是常驻内存的，只有你去唤醒它，触发它的事件时才会占用计算资源，其他时间都是退出硬件静静地躺在硬盘上的文件而已。很多人以为提虚拟机、容器服务就是云计算了，以为虚拟机容器就能把计算资源抽象出来了，那其实和以前的服务器租赁没啥区别，正如《问道云计算》书中所说，它们并没有构建出通用的计算资源池，真正的云计算应该像Serverless这样，对硬件基础设施进一步抽象，构建出通用的计算资源池。从这个角度来看，Serverless在重新定义云计算的形态。除了云基础设施，Serverless同时也在重新定义云应用，传统的软件形态可能必须重构，运行在Serverless平台上的无状态函数式应用可能才是云应用的应有形态。展望Serverless未来现在云计算产业正如火如荼地发展，未来Serverless很可能是决定公有云竞争格局的关键因素，得Serverless者得天下。未来的Serverless平台上，通过函数式应用调起硬件资源，不管底层是CPU、GPU、FPGA还是ASIC，都可以通过FaaS提供计算服务；上层都是统一的函数式应用，不管你是普通的Web服务、大数据处理还是神经网络训练，都可以通过FaaS获取计算服务。当然目前来看，Serverless还远未成熟，但从未来来看，Serverless必将是云计算的一道曙光，甚至是云计算的一场革命。]]></content>
+      <categories>
+        <category>Serverless</category>
+      </categories>
+      <tags>
+        <tag>微服务</tag>
+        <tag>云计算</tag>
+        <tag>Serverless</tag>
+        <tag>FaaS</tag>
+        <tag>熵</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Docker容器的基本使用]]></title>
+    <url>%2Fdocker-intro%2F</url>
+    <content type="text"><![CDATA[Docker是用go语言开发的开源容器引擎，通过轻量级沙箱机制，使应用在一个容器中运行，在几乎不损失性能情况下，使应用之间得到很好的隔离。Docker容器将应用以集装箱形式打包，然后就能轻松部署到任意Linux服务器中，所以Docker容器技术极大地提升了软件交付效率。本文讲述在Windows系统上Docker容器的基本使用。Docker安装Windows系统安装Docker Toolbox，安装完后，会有Docker Quickstart Terminal和Kitematic两个快捷方式。Docker Quickstart Terminal会进入命令行终端，Kitematic是一个Docker的GUI工具，可以在图形界面管理Docker容器和镜像。常用的Docker命令进入Docker Cli终端执行常用的Docker命令，实现容器的Build, Ship, Run功能。1234# 下载镜像docker pull centosdocker imagesdocker images 查看本地镜像列表：也可以在Kitematic中查看Docker镜像：1234567891011121314151617# 运行一个Docker容器docker run -d -p 9000:80 nginx# 查看运行的容器docker ps# 进入容器内bash终端docker exec -it badd967af535 bash# 关闭Docker容器docker stop badd967af535# 关闭所有容器docker stop $(docker ps -q)# 删除Docker镜像docker rmi a47a5669ac57构建Docker镜像普通应用要构建为Docker镜像，需要一个Dockerfile文件，它是构建镜像的脚本文件，然后使用docker build 命令构建镜像。例如用Node.js搭建个人博客，然后构建成名为 node-blog 的镜像。npm的package.json配置：1234567891011121314151617&#123; "name": "node-blog", "version": "1.0.0", "main": "app.js", "private": true, "scripts": &#123; "start": "node app.js" &#125;, "dependencies": &#123; "express": "~4.15.2" &#125;, "keywords": [ "Node.js", "Docker" ], "author": "Terry"&#125;只开启一个静态网页服务，应用主体app.js只有几行代码：123456var express = require('express');var app = express();app.use(express.static(__dirname + '/public/'));app.listen(3000);编写Dockerfile文件：123456789FROM node:alpineMAINTAINER Terry &lt;2219569347@qq.com&gt;WORKDIR /appCOPY package.json .RUN npm install --registry=https://registry.npm.taobao.orgCOPY . /appCMD ["npm","start"]构建Docker镜像：1docker build -t yunterry/node-blog:latest .构建完成后通过 docker images 可以看到该镜像。Docker Hub镜像托管Docker Hub可以免费托管和分享Docker镜像，类似于GitHub把 node-blog 镜像push到Docker Hub：12345# 登录Docker Hubdocker login# 上传镜像docker push yunterry/node-blog然后在Docker Hub官网就可以搜到该镜像：https://hub.docker.com/r/yunterry/node-blog可以发现，Docker镜像仓库的设计思想与git如出一辙，使用方法也基本类似。运行镜像Docker的好处是不用担心开发和生产环境不一致的问题，容器保证运行效果一致性，在另一台主机上运行博客镜像：12345# 从远程仓库下载镜像docker pull yunterry/node-blog# 运行node-blog镜像docker run -d -p 5230:3000 yunterry/node-blog该镜像在容器内启动的是3000端口，映射到容器外5230端口。浏览器打开 http://192.168.99.100:5230示例代码https://github.com/yunTerry/node-blog]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+        <tag>容器</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Spring Cloud Zuul微服务网关的API限流]]></title>
+    <url>%2Fzuul-rate-limit%2F</url>
+    <content type="text"><![CDATA[API限流微服务开发中有时需要对API做限流保护，防止网络攻击，比如做一个短信验证码API，限制客户端的请求速率能在一定程度上抵御短信轰炸攻击，降低损失。微服务网关是每个请求的必经入口，非常适合做一些API限流、认证之类的操作，这里有一个基于zuul微服务网关的API限流库：https://github.com/marcosbarbero/spring-cloud-zuul-ratelimit使用方法比如我们要对user-service这个服务进行限流，限制每个请求源每分钟最多只能请求10次。首先在项目中添加 spring-cloud-zuul-ratelimit 依赖：12345&lt;dependency&gt; &lt;groupId&gt;com.marcosbarbero.cloud&lt;/groupId&gt; &lt;artifactId&gt;spring-cloud-zuul-ratelimit&lt;/artifactId&gt; &lt;version&gt;1.5.0.RELEASE&lt;/version&gt;&lt;/dependency&gt;然后再添加如下配置即可：123456789101112zuul: ratelimit: enabled: true behind-proxy: true policy-list: user-service: - limit: 10 refresh-interval: 60 type: - user - origin - url测试客户端如果60s内请求超过10次，服务端就抛出异常，一分钟后又可以正常请求某个IP的客户端被限流并不影响其他客户端，即API网关对每个客户端限流是相互独立的限流数据存储对API限流是基于Zuul过滤器完成的，默认情况下限流数据是记录在内存中的，实际上是用ConcurrentHashMap保存，当然也提供了多种存储方式，包括Redis、Consul、Spring Data JPA，使用这三种存储方式要添加相关依赖。然后再添加存储配置，比如使用Redis的配置：123zuul: ratelimit: repository: Redis原理分析限流拦截时机限流过滤器是在请求被转发之前调用的1234@Overridepublic String filterType() &#123; return "pre";&#125;限流类型限流类型主要包括url、origin、user三种123456789if (types.contains(URL)) &#123; joiner.add(route.getPath());&#125;if (types.contains(ORIGIN)) &#123; joiner.add(getRemoteAddr(request));&#125;if (types.contains(USER)) &#123; joiner.add(request.getUserPrincipal() != null ? request.getUserPrincipal().getName() : ANONYMOUS);&#125;url类型的限流就是通过请求路径区分origin是通过客户端IP地址区分user是通过授权用户进行区分，也包括匿名用户可以多个限流类型结合使用如果不配置限流类型，就不做以上区分拦截限流请求在过滤器的run方法中判断请求剩余次数，小于0就拦截请求：123456if (rate.getRemaining() &lt; 0) &#123; ctx.setResponseStatusCode(TOO_MANY_REQUESTS.value()); ctx.put("rateLimitExceeded", "true"); throw new ZuulRuntimeException(new ZuulException(TOO_MANY_REQUESTS.toString(), TOO_MANY_REQUESTS.value(), null));&#125;可以看到，单位时间内剩余请求次数小于0时抛出ZuulRuntimeException，直接返回客户端TOO_MANY_REQUESTS异常消息，达到拦截请求的效果。示例代码https://github.com/yunTerry/spring-cloud-netflix]]></content>
+      <categories>
+        <category>Spring Cloud</category>
+      </categories>
+      <tags>
+        <tag>Spring Cloud</tag>
+        <tag>API网关</tag>
+        <tag>Zuul</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[云服务器的自动化部署与运维]]></title>
+    <url>%2Fserver-auto%2F</url>
+    <content type="text"><![CDATA[云计算是IT行业的一大变革，未来云计算将成为商业社会的基础设施，国内阿里、腾讯、京东、美团等一众互联网公司都提供云服务，玩玩服务器变得非常容易了，本文简单地总结一下从项目打包到部署运维的经验。项目打包基于SpringBoot开发的项目一般使用maven或gradle来管理，项目打包成jar可执行文件都很简单：12345# maven项目打包mvn clean package# gradle项目打包gradlew build实际中很多时候，比如由于数据库配置文件的更改导致测试无法通过，打包就无法顺利完成，这时我们希望不测试直接打包，使用1mvn clean package -Dmaven.test.skip=true这条命令可以跳过测试，直接打包，效率提升不少。启动服务使用Xftp或WinSCP等工具登录云主机，把生成的jar文件上传到服务器，在Xshell中执行:1java -jar /root/app.jar就可以在前台启动项目，这种方式只要控制台关闭，服务就关闭了，通常用来测试项目是否正常运行，正式部署一般用nohup命令使服务在后台运行:1nohup java -jar /root/app.jar &amp;部署的时候我们临时指定服务运行的端口号：1java -jar app.jar --server.port=2030也可以让它读取不同的配置文件：1java -jar app.jar --spring.profiles.active=dev或者直接使用外部的配置文件运行：1java -jar -Dspring.config.location=app.properties app.jar关闭和重启服务程序运行在服务器后台，通过命令行进行关闭和重启管理服务用进程管理简单的方式就是通过应用进程来管理，我们知道程序运行的端口号，通过端口号查询进程ID，就可以直接kill掉:例如使用lsof -i:5032或netstat -anp|grep 5032可以拿到5032端口的pid，然后直接kill pid即可关闭该进程，启动再使用上面的java -jar命令即可。部署多个服务时，可以写一个 Shell 脚本来管理：12345678910111213141516171819202122232425262728293031#!/bin/bashser1=2001ser2=2002# 启动服务read -p "start ser1:" val1if [ "$val1" = "y" ];thennohup java -jar /root/ser1-1.0.jar &amp;echo "ser1 started"firead -p "start ser2:" val2if [ "$val2" = "y" ];thennohup java -jar /root/ser2-1.0.jar &amp;echo "ser2 started"fi# 关闭服务read -p "stop ser1:" val3if [ "$val3" = "y" ];thenkill -9 $(netstat -anp|grep $ser1|awk '&#123;printf $7&#125;'|cut -d/ -f1)echo "ser1 stopped"firead -p "stop ser2:" val4if [ "$val4" = "y" ];thenkill -9 $(netstat -anp|grep $ser2|awk '&#123;printf $7&#125;'|cut -d/ -f1)echo "ser2 stopped"fi注册为服务除了用进程来管理，另一种更优雅的方式就是通过Linux的软连接把应用注册为服务，然后通过start、stop这样的命令进行管理。软连接就类似于Windows上的快捷方式，在/etc/init.d/文件夹中创建一个软连接，通过这个软连接来管理应用启动和停止：12345678910# 为ser1-1.0.jar创建软连接ln -s /root/ser1-1.0.jar /etc/init.d/ser1# 赋予执行权限chmod +x /etc/init.d/ser1# 启动应用/etc/init.d/ser1 start# 关闭或重启/etc/init.d/ser1 stop|restartPython自动化部署前面我们使用Xshell和Xftp等可视化的工具可以很方便地把jar文件上传到服务器，然后运行起来，如果你觉得这些工具还是很繁琐，可以使用Python脚本实现一键自动上传和部署。Python提供了一个paramiko库，能够支持SSH和SFTP协议，可以取代Xshell和Xftp，下面是把本机的jar文件上传到服务器并运行的Python脚本：12345678910111213141516171819202122232425262728293031323334353637383940414243# coding=utf-8import threadingimport paramikoIP = '106.14.19.127'user = 'root'password = 'server-pwd'local_jar = '/target/ser1-1.0.jar'server_jar = '/root/ser1-1.0.jar'server_property = '/root/ser1.properties'def execute_cmds(ip, name, pwd, cmd): try: ssh = paramiko.SSHClient() ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy()) ssh.connect(ip, 22, name, pwd, timeout=5) print '连接成功' sftp = ssh.open_sftp() print '正在上传...' sftp.put(local_jar, server_jar) print 'jar上传成功' for m in cmd: print m stdin, stdout, stderr = ssh.exec_command(m) out = stdout.readlines() for o in out: print o, print '运行成功' ssh.close() print '关闭连接' except Exception, error: print '错误: %s' % (error)if __name__ == '__main__': print 'Start deploying %s to server %s' % (server_jar, IP) cmd = [ 'echo Start spring...', 'nohup java -jar -Dspring.config.location=' + server_property + ' ' + server_jar + ' &amp;', 'echo All done.' ] a = threading.Thread(target=execute_cmds, args=(IP, user, password, cmd)) a.start()]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>SpringBoot</tag>
+        <tag>运维</tag>
+        <tag>云计算</tag>
+        <tag>Linux</tag>
+        <tag>Shell</tag>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Nginx代理的多端口实例负载均衡]]></title>
+    <url>%2Fnginx-lb%2F</url>
+    <content type="text"><![CDATA[Nginx作为高性能服务器，除了搭建普通的web服务，也经常用作反向代理或微服务网关。为了实现服务高可用，通常会启动多个服务实例，这样某个实例挂掉并不影响整体的可用性，Nginx可以在多个实例中实现负载均衡，并提供了多种负载均衡策略。本人手头只有一台服务器，所以就在本机多端口开启多个实例，并在这些实例中实现负载均衡。在http配置：12345678910111213141516upstream backser &#123; server localhost:7100; server localhost:7200; server localhost:7300;&#125;server &#123; listen 8000; server_name backserver; location / &#123; root html; index index.html index.htm; proxy_pass http://backser; &#125;&#125;启动服务端：1234567# 启动三个Java实例java -jar app.jar --server.port=7100java -jar app.jar --server.port=7200java -jar app.jar --server.port=7300# 启动nginxstart nginx默认情况Nginx会把请求轮流派发给各个实例，实现最简单的负载均衡。这种轮询策略可以加入权重，进行负载微调和故障转移：12345upstream backser &#123; server localhost:7100 weight=1 fail_timeout=3s max_fails=2; server localhost:7200 weight=2 fail_timeout=3s max_fails=2; server localhost:7300 weight=3 fail_timeout=3s max_fails=2;&#125;另一种使用较多的是ip_hash策略，能将来自同一IP的客户端请求派发给同一个服务实例，在分布式环境中，可以解决session不共享的问题。123456upstream backser &#123; server localhost:7100 fail_timeout=3s max_fails=2; server localhost:7200 fail_timeout=3s max_fails=2; server localhost:7300 fail_timeout=3s max_fails=2; ip_hash;&#125;加载修改后的配置：1nginx -s reload然后同一个客户端请求会发现只有一个实例在响应。]]></content>
+      <categories>
+        <category>Nginx</category>
+      </categories>
+      <tags>
+        <tag>Nginx</tag>
+        <tag>运维</tag>
+        <tag>API网关</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Retrofit 巧妙的回调封装]]></title>
+    <url>%2Fretrofit-callback%2F</url>
+    <content type="text"><![CDATA[Retrofit回调封装的意义在Android的世界里，可以说 Retrofit 已经一统网络请求的江湖，Retrofit和Spring Cloud中的 Feign 一样都是声明式REST请求客户端，都提供了大量注解和完善的json对象转换机制，同时不失灵活性。通常服务端返回都是这种统一格式的对象：1234567public class BaseModel&lt;T&gt; &#123; public int code; public String message; public T data;&#125;Android端拿到这个对象通常要判断code，然后做对象剥离、token有效性判断、网络故障处理等，这些如果封装起来统一处理，可以极大简化网络调用。这里根据实际开发经验，对使用了Rxjava的回调和普通回调分别作了封装，实现以上功能。使用Rxjava的回调封装Retrofit通过RxJava2CallAdapter可以直接将返回结果转换为可观察的对象，拿到Observable进行一系列链式处理就方便多了。比如声明一个API调用方法：12@GET("/userinfo")Observable&lt;BaseModel&lt;User&gt;&gt; getRxUser();我们通过一个实现Observer接口的抽象类对返回结果进行处理，实现对象剥离、token有效性判断、网络故障的统一处理。完整封装代码：123456789101112131415161718192021222324252627282930313233343536373839404142public abstract class RxSubscribe&lt;T&gt; implements Observer&lt;BaseModel&lt;T&gt;&gt; &#123; public RxSubscribe() &#123; &#125; protected abstract void onSuccess(T t); protected void onFailed(int code, String msg) &#123; &#125; @Override public void onSubscribe(@NonNull Disposable d) &#123; &#125; @Override public void onComplete() &#123; &#125; @Override public void onNext(BaseModel&lt;T&gt; baseModel) &#123; if (baseModel.code == 200) &#123; onSuccess(baseModel.data); &#125; else if (baseModel.code == 303) &#123; //比如 做token无效统一处理 onFailed(baseModel.code, baseModel.message); &#125; else &#123; onFailed(baseModel.code, baseModel.message); &#125; &#125; @Override public void onError(Throwable t) &#123; if (t instanceof ConnectException) &#123; onFailed(403, t.getMessage()); &#125; else if (t instanceof HttpException) &#123; HttpException ex = (HttpException) t; onFailed(ex.code(), ex.message()); &#125; else &#123; onFailed(405, t.getMessage()); &#125; &#125;&#125;注意这里使用的是RxJava2，为使代码更简洁，不强制复写onSubscribe、onFailed等方法。请求回调部分，复写onSuccess抽象方法就可以直接拿到剥离后目标对象：123456789Rest.getRestApi().getRxUser() .subscribeOn(Schedulers.io()) .observeOn(AndroidSchedulers.mainThread()) .subscribe(new RxSubscribe&lt;User&gt;() &#123; @Override protected void onSuccess(User user) &#123; &#125; &#125;);还可以复写onSubscribe和onComplete等方法控制加载中对话框的显示与隐藏。普通回调的封装对于普通回调，返回的是Call类型，声明一个API调用方法：12@GET("/userinfo")Call&lt;BaseModel&lt;User&gt;&gt; getUser();回调封装部分与上面类似，直接上代码：123456789101112131415161718192021222324252627282930313233343536373839public abstract class BaseBack&lt;T&gt; implements Callback&lt;BaseModel&lt;T&gt;&gt; &#123; public BaseBack() &#123; &#125; protected abstract void onSuccess(T t); protected void onFailed(int code, String msg) &#123; &#125; @Override public void onResponse(Call&lt;BaseModel&lt;T&gt;&gt; call, Response&lt;BaseModel&lt;T&gt;&gt; response) &#123; BaseModel&lt;T&gt; baseModel = response.body(); if (response.isSuccessful() &amp;&amp; baseModel != null) &#123; if (baseModel.code == 200) &#123; onSuccess(baseModel.data); &#125; else if (baseModel.code == 303) &#123; //比如 做token无效统一处理 onFailed(baseModel.code, baseModel.message); &#125; else &#123; onFailed(baseModel.code, baseModel.message); &#125; &#125; else &#123; onFailed(response.code(), response.message()); &#125; &#125; @Override public void onFailure(Call&lt;BaseModel&lt;T&gt;&gt; call, Throwable t) &#123; if (t instanceof ConnectException) &#123; onFailed(403, t.getMessage()); &#125; else if (t instanceof HttpException) &#123; HttpException ex = (HttpException) t; onFailed(ex.code(), ex.message()); &#125; else &#123; onFailed(405, t.getMessage()); &#125; &#125;&#125;同样是复写onSuccess方法直接拿到剥离后的目标对象:1234567Rest.getRestApi().getUser() .enqueue(new BaseBack&lt;User&gt;() &#123; @Override protected void onSuccess(User user) &#123; &#125;&#125;);源码地址：Retrofit-CallBack]]></content>
+      <categories>
+        <category>Android</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>RESTful</tag>
+        <tag>Retrofit</tag>
+        <tag>RxJava</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Android与服务端使用Https加密通信]]></title>
+    <url>%2FAndroid-https%2F</url>
+    <content type="text"><![CDATA[Https证书现在网络安全越来越受重视，通用做法是采用https加密通信，使用https需要数字证书，只有合法的证书才能被浏览器、操作系统默认支持。所谓的合法证书其实是在CA公司那购买的（原来我们的合法性是花钱从别人那买来的，不得不吐槽这种互联网安全设计真是坑爹），虽然现在也有一些免费CA证书，但申请还是挺麻烦，这里我们使用自签名的https证书，基于这种没有经过CA机构签名的证书，也可以实现Android与服务端之间的加密通信。服务端使用https生成https证书JDK自带的keytool工具可以很方便生成https证书，可以查看它的使用方法：比如这条命令就可以生成一个有效期10年的证书：1keytool -genkey -alias spring -validity 3560 -keystore spring.keystore服务端配置https证书服务端一般使用Tomcat、Jetty、Undertow等作为Servlet容器，我们将上面生成的keystore证书放在项目中，然后在配置文件中引入证书即可：1234server.ssl.key-store=spring.keystoreserver.ssl.key-alias=springserver.ssl.key-password=passwordserver.ssl.key-store-type=JKS这样服务端就支持https了，启动项目访问服务就要加https前缀，如 https://localhost:8080/userAndroid自定义https校验如果是花钱买的CA证书是不需要额外配置的，Android系统内部有信任列表，会自行校验通过，这里讲配置自定义https校验。Android端通常使用 Retrofit 做网络请求，Retrofit底层就是OKhttp，OKhttp实现自定义https校验并不难，主要分三步。把证书公钥预埋在APP中这条命令可以导出证书公钥字符串：1keytool -list -rfc -keystore spring.keystore把这个公钥作为一个字符串常量放在项目中供后面校验使用。自定义证书校验逻辑使用上面的公钥字符串构建X509TrustManager对象，在checkServerTrusted方法中校验服务端证书：1234567891011121314151617181920212223242526272829X509TrustManager trustManager = new X509TrustManager() &#123; @Override public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException &#123; //校验客户端证书 &#125; @Override public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException &#123; //校验服务端证书 X509Certificate ca = (X509Certificate) CertificateFactory.getInstance("X.509") .generateCertificate(new ByteArrayInputStream(PUB_KEY.getBytes())); for (X509Certificate cert : chain) &#123; // 检查服务端证书是否过期 cert.checkValidity(); try &#123; //和APP预埋证书对比 cert.verify(ca.getPublicKey()); &#125; catch (Exception e) &#123; //证书校验异常 throw new SecurityException("Certificate error！"); &#125; &#125; &#125; @Override public X509Certificate[] getAcceptedIssuers() &#123; return new X509Certificate[0]; &#125;&#125;;注意证书校验异常时抛出一个SecurityException，如果不抛出这个RuntimeException，程序会继续执行，请求依然正常，证书校验就没有意义。设置OkHttpClient校验证书然后使用上面的trustManager构建OkHttpClient1234567891011121314151617181920SSLSocketFactory sslSocketFactory = null;try &#123; SSLContext sslContext = SSLContext.getInstance("TLS"); sslContext.init(null, new TrustManager[]&#123;trustManager&#125;, new SecureRandom()); sslSocketFactory = sslContext.getSocketFactory();&#125; catch (NoSuchAlgorithmException | KeyManagementException e) &#123; e.printStackTrace();&#125;final HostnameVerifier hostnameVerifier = new HostnameVerifier() &#123; @Override public boolean verify(final String hostname, final SSLSession session) &#123; //服务端主机域名地址校验 return true; &#125;&#125;;OkHttpClient client = new OkHttpClient.Builder() .hostnameVerifier(hostnameVerifier) .sslSocketFactory(sslSocketFactory, trustManager) .build();使用这个配置好的OkHttpClient与服务端交互，就可以支持自定义https证书加密通信了，如果服务端证书不符，请求会自动断开。]]></content>
+      <categories>
+        <category>安全</category>
+      </categories>
+      <tags>
+        <tag>Https</tag>
+        <tag>Android</tag>
+        <tag>Okhttp</tag>
+        <tag>安全</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[用Node.js快速开发RESTful API]]></title>
+    <url>%2Fnode-rest%2F</url>
+    <content type="text"><![CDATA[前面讲了用Node.js开发静态网页服务，这一篇讲用Node.js开发RESTful API服务，同样是基于 express 框架。Node 返回 json比如开发一个用户信息接口，通过get方法返回用户信息：1234567891011121314151617181920var express = require('express')var app = express()var json = &#123; code: 200, msg: '请求成功', data: &#123; userId: '123456', name: 'Terry', blog: 'https://yunm.coding.me' &#125;&#125;app.get("/", function (req, res) &#123; res.send(json)&#125;)app.listen(5438, function () &#123; console.log("启动服务 http://localhost:5438 ")&#125;)运行代码，打开 http://localhost:5438 ，就可以看到返回的json：Node 连接 MySQL 数据库Node可以很方便地从MySQL数据库查询数据并返回，例如查询年龄为20的用户信息，封装成 RESTful 接口：12345678910111213141516171819202122var express = require('express');var app = express();var mysql = require('mysql');var connection = mysql.createConnection(&#123; host : 'localhost', user : 'root', password : 'xxxx', database : 'userdb'&#125;);connection.connect();connection.query('select * from user where age=20', function (error, results) &#123; if (error) throw error; app.get('/',function (req, res) &#123; res.send(results); &#125;)&#125;);app.listen(5000, function () &#123; console.log('启动服务 http://localhost:5000');&#125;);运行代码，打开 http://localhost:5000 ，就可以看到返回的json：当然了，Node.js在分布式系统开发方面并不成熟，现阶段node貌似更适合快速开发小型服务，大型系统还是要用Spring Cloud等做服务注册发现，做高可用。]]></content>
+      <categories>
+        <category>Node.js</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+        <tag>Node.js</tag>
+        <tag>express</tag>
+        <tag>RESTful</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[六行代码搭建静态网站]]></title>
+    <url>%2Fnode-static%2F</url>
+    <content type="text"><![CDATA[很多人觉得用SpringBoot开发后端服务太方便了，但是Node.js可能比SpringBoot更方便，用SpringBoot你要按部就班先新建一个工程，然后再写逻辑代码，但用Node.js直接拿一个js文件就开写，写完直接一条命令 node xx.js 就跑起来了，启动速度也甩SpringBoot几条街。不得不承认nodejs很简洁、高效，甚至可以说，在node面前，Java的Spring框架显得有些臃肿不堪。比如要搭一个静态网页，node只需六行代码就可以搞定。node搭建静态博客就拿我的博客为例，先从github上把博客的网页源码下载下来：https://github.com/yunTerry/yunTerry.github.io把这些静态html、css、js网页文件放在电脑D盘blog文件夹下，路径：D:/blog/，新建一个app.js中加入如下代码：12345678var express = require('express');var app = express();app.use(express.static('D:/blog/'));app.listen(5000, function () &#123; console.log('启动服务 http://localhost:5000');&#125;);然后执行 node app.js ，浏览器打开 http://localhost:5000 就能看到网页服务就跑起来了：当然运行这段代码需要 express 模块，全局安装 express 模块：1npm install -g express也可以简写成1npm i -g express其他方式搭建当然用SpringBoot搭建也很简单，只需三行配置：123server.port=5000spring.mvc.static-path-pattern=/**spring.resources.static-locations=file:D:/blog/或者用Nginx也很简单:123456789server &#123; listen 5000; server_name blog; location / &#123; root D:/blog/; index index.html index.htm; &#125;&#125;]]></content>
+      <categories>
+        <category>Node.js</category>
+      </categories>
+      <tags>
+        <tag>Node.js</tag>
+        <tag>静态网页</tag>
+        <tag>express</tag>
+        <tag>npm</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Spring Cloud与Consul服务发现]]></title>
+    <url>%2Fcloud-consul%2F</url>
+    <content type="text"><![CDATA[Consul服务发现Consul是一个开源的服务注册发现工具，采用Go语言开发，支持多数据中心分布式高可用的服务发现和配置共享，广泛应用在大规模分布式系统中。Spring Cloud原生支持使用Consul做服务注册发现，类似Eureka、ZooKeeper。下载 Consul 软件，对其运行consul agent -dev，启动开发模式在项目中添加依赖1compile(&apos;org.springframework.cloud:spring-cloud-starter-consul-discovery&apos;)添加consul注册中心配置12spring.cloud.consul.host=localhostspring.cloud.consul.port=8500打开 http://localhost:8500 查看服务注册情况服务提供者service provider 在5030端口提供一组管理用户信息的接口：1234567891011@PostMapping("/user")User addUser(@RequestBody User user);@GetMapping("/getauser")User getUser(@RequestParam("id") Integer id);@GetMapping("/user")List&lt;User&gt; getAllUser();@DeleteMapping("/user")void deleteUser(@RequestParam("id") Integer id);配置MySQL数据库12345spring.datasource.dbcp2.driver-class-name=com.mysql.jdbc.Driverspring.datasource.url=jdbc:mysql://127.0.0.1:3306/userdb?useUnicode=true&amp;characterEncoding=UTF-8spring.datasource.username=rootspring.datasource.password=qqqqspring.jpa.hibernate.ddl-auto=update服务消费者这里使用feign调用服务提供者，service consumer 在5031端口提供用户信息相关接口12345678@PostMapping("/user/add/&#123;name&#125;")User addUser(@PathVariable("name") String name);@GetMapping("/user/&#123;id&#125;")User getUser(@PathVariable("id") Integer id);@GetMapping("/user")List&lt;User&gt; getUserList();执行post请求到http://localhost:5031/user/add/Lerry 向数据库添加一条数据通过http://localhost:5031/user 得到用户列表123456789101112131415161718[ &#123; "id": 1, "name": "Lerry", "img": "http://up.qqjia.com/z/16/tu17317_45.png", "sex": "girl", "age": 20, "time": 1499761984675 &#125;, &#123; "id": 4, "name": "kity", "img": "http://up.qqjia.com/z/16/tu17317_45.png", "sex": "girl", "age": 20, "time": 1499762171942 &#125;]项目源码https://github.com/yunTerry/spring-cloud-consul]]></content>
+      <categories>
+        <category>Spring Cloud</category>
+      </categories>
+      <tags>
+        <tag>Spring Cloud</tag>
+        <tag>Consul</tag>
+        <tag>SpringBoot</tag>
+        <tag>服务发现</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[书法之美]]></title>
+    <url>%2Fshufa%2F</url>
+    <content type="text"><![CDATA[摄于广州余荫山房]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+  </entry>
+  <entry>
+    <title><![CDATA[互联网行业的多样性思考]]></title>
+    <url>%2Fduo-yang-xin%2F</url>
+    <content type="text"><![CDATA[谷歌最近有个工程师因为发文涉嫌性别歧视而被解雇，忽然发现硅谷科技公司最近都开始重视员工多样性建设，谷歌还专门任命了多样性副总裁，苹果最近在其总部举行员工多样性庆祝活动（当然不知道他们为什么庆祝）。我觉得这确实是一个值得重视的问题，随着互联网的发展，技术人员群体越来越同质化，男性越来越多，女性比例越来越少，大家在一起的话题寥寥无几，人与人之间的交流越发枯燥乏味，技术给人带来便利和财富，但却让人感觉更加孤独和乏味。其实想想乔布斯年轻时代，至少还有一帮嬉皮士在那搞怪，而现在呢，大家如此的相似，技术几乎成了唯一的话题，人的多样性降低了很多，这是一个我们不得不深思的问题。多样性本是生物学上一个重要概念，物种的多样性是种群得以繁荣的根本，你看那海水中的赤潮，那是某些藻类生物大量繁殖的结果，它们很繁盛能将海水染红，但它们都是同类，他们的多样性极低，所以那繁盛只是它们即将消亡前的回光返照。今天互联网行业也面临类似的危机，马云很早就强调女性员工的重要性，我们迫切需要提高这个行业人员的多样性，不仅是性别，还包括思想的多样性、价值观的多样性、兴趣爱好的多样性······过度的同质化会让风险越来越集中，也许当某一天风险集中爆发时我们将措手不及。]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>多样性</tag>
+        <tag>女性</tag>
+      </tags>
+  </entry>
+</search>

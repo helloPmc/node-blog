@@ -1,0 +1,314 @@
+<!DOCTYPE html><html class="theme-next pisces use-motion" lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"><link href="//fonts.googleapis.com/css?family=source code pro:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css"><meta name="keywords" content="Spring Cloud,SpringBoot,服务发现,微服务,"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1"><meta name="description" content="Spring Cloud微服务框架Spring Cloud是基于Netflix等公司大量的微服务实践，封装出的一整套微服务开发框架，主要包括微服务网关、配置中心、服务注册发现、远程调用、负载均衡、消息总线、容错断路、监控追踪等模块，为开发高可用、高可扩展性的分布式应用提供了一套易用的解决方案。"><meta name="keywords" content="Spring Cloud,SpringBoot,服务发现,微服务"><meta property="og:type" content="article"><meta property="og:title" content="Spring Cloud分布式微服务实践"><meta property="og:url" content="https://github.com/yunTerry/springcloud/index.html"><meta property="og:site_name" content="Terry"><meta property="og:description" content="Spring Cloud微服务框架Spring Cloud是基于Netflix等公司大量的微服务实践，封装出的一整套微服务开发框架，主要包括微服务网关、配置中心、服务注册发现、远程调用、负载均衡、消息总线、容错断路、监控追踪等模块，为开发高可用、高可扩展性的分布式应用提供了一套易用的解决方案。"><meta property="og:locale" content="zh-Hans"><meta property="og:image" content="https://github.com/pic/cloud/1.jpg"><meta property="og:image" content="https://github.com/pic/cloud/2.jpg"><meta property="og:image" content="https://github.com/pic/cloud/3.jpg"><meta property="og:image" content="https://github.com/pic/cloud/4.jpg"><meta property="og:image" content="https://github.com/pic/cloud/5.jpg"><meta property="og:image" content="https://github.com/pic/cloud/6.jpg"><meta property="og:updated_time" content="2018-03-21T04:22:03.808Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Spring Cloud分布式微服务实践"><meta name="twitter:description" content="Spring Cloud微服务框架Spring Cloud是基于Netflix等公司大量的微服务实践，封装出的一整套微服务开发框架，主要包括微服务网关、配置中心、服务注册发现、远程调用、负载均衡、消息总线、容错断路、监控追踪等模块，为开发高可用、高可扩展性的分布式应用提供了一套易用的解决方案。"><meta name="twitter:image" content="https://github.com/pic/cloud/1.jpg"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Pisces",sidebar:{position:"left",display:"post",offset:12,offset_float:0,b2t:!1,scrollpercent:!1,onmobile:!1},fancybox:!0,motion:!0,duoshuo:{userId:"undefined",author:"博主"},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><link rel="canonical" href="https://github.com/yunTerry/springcloud/"><title>Spring Cloud分布式微服务实践 | Terry</title></head><body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans"><div class="container sidebar-position-left page-post-detail"><div class="headband"></div><header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-wrapper"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Terry</span> <span class="logo-line-after"><i></i></span></a></div><p class="site-subtitle">Android、云计算</p></div><div class="site-nav-toggle"><button><span class="btn-bar"></span> <span class="btn-bar"></span> <span class="btn-bar"></span></button></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br>分类</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i><br>关于</a></li><li class="menu-item menu-item-search"><a href="javascript:" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br>搜索</a></li></ul><div class="site-search"><div class="popup search-popup local-search-popup"><div class="local-search-header clearfix"><span class="search-icon"><i class="fa fa-search"></i> </span><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span><div class="local-search-input-wrapper"><input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input"></div></div><div id="local-search-result"></div></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://github.com/yunTerry/springcloud/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="Terry"><meta itemprop="description" content=""><meta itemprop="image" content="/pic/logo.jpg"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Terry"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Spring Cloud分布式微服务实践</h1><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i> </span><span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-07T10:45:00+08:00">2018-03-07 </time></span><span class="post-category"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-folder-o"></i> </span><span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring-Cloud/" itemprop="url" rel="index"><span itemprop="name">Spring Cloud</span></a></span></span></div></header><div class="post-body" itemprop="articleBody"><h2 id="Spring-Cloud微服务框架"><a href="#Spring-Cloud微服务框架" class="headerlink" title="Spring Cloud微服务框架"></a>Spring Cloud微服务框架</h2><p>Spring Cloud是基于Netflix等公司大量的微服务实践，封装出的一整套微服务开发框架，主要包括微服务网关、配置中心、服务注册发现、远程调用、负载均衡、消息总线、容错断路、监控追踪等模块，为开发高可用、高可扩展性的分布式应用提供了一套易用的解决方案。<br><a id="more"></a></p><p>Spring Cloud的微服务组件基于Spring Boot开发，可以说Spring Boot是Spring Cloud的基石。</p><p>Spring Boot通过自动配置等功能极大地简化了Spring应用的开发，提升了开发效率，同时支持内嵌Tomcat（以及Jetty、Undertow）等Servlet容器，打包部署更加方便。</p><p>前不久刚刚发布了SpringBoot 2.0版本，该版本最大特点是将响应式编程作为首选的编程范式，支持WebFlux、RxJava，更易于实现异步和事件驱动，创建完全非阻塞式应用。</p><h2 id="分布式微服务实践"><a href="#分布式微服务实践" class="headerlink" title="分布式微服务实践"></a>分布式微服务实践</h2><p>这里我们基于Spring Cloud开发一个分布式应用，主要用到Config配置中心，Eureka服务注册发现，Feign做服务调用，Zuul微服务网关，Ribbon负载均衡， Hystrix服务容错保护，Admin服务管控，Zipkin服务追踪，具体包括以下几个微服务：</p><h3 id="注册中心-eureka-server"><a href="#注册中心-eureka-server" class="headerlink" title="注册中心 eureka-server"></a>注册中心 eureka-server</h3><p>启动应用后，打开 <a href="http://localhost:8761" target="_blank" rel="noopener">http://localhost:8761</a> 可以看到启动的服务实例</p><p><img src="/pic/cloud/1.jpg" alt=""></p><h3 id="配置中心-config-server"><a href="#配置中心-config-server" class="headerlink" title="配置中心 config-server"></a>配置中心 config-server</h3><p>该服务将git仓库中的配置文件以接口形式提供，客户端可以获取并加载配置。</p><p>例如获取eureka配置信息，打开 <a href="http://localhost:3600/eureka/default" target="_blank" rel="noopener">http://localhost:3600/eureka/default</a></p><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"name"</span>: <span class="string">"eureka"</span>,</div><div class="line">    <span class="attr">"profiles"</span>: [</div><div class="line">        <span class="string">"default"</span></div><div class="line">    ],</div><div class="line">    <span class="attr">"label"</span>: <span class="literal">null</span>,</div><div class="line">    <span class="attr">"version"</span>: <span class="string">"a716ea609caaa0811387bcc616227b42e6094b26"</span>,</div><div class="line">    <span class="attr">"state"</span>: <span class="literal">null</span>,</div><div class="line">    <span class="attr">"propertySources"</span>: [</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"name"</span>: <span class="string">"https://github.com/yunTerry/spring-cloud-netflix/config-repo/eureka.yml"</span>,</div><div class="line">            <span class="attr">"source"</span>: &#123;</div><div class="line">                <span class="attr">"spring.application.name"</span>: <span class="string">"eureka-server"</span>,</div><div class="line">                <span class="attr">"server.port"</span>: <span class="number">8761</span>,</div><div class="line">                <span class="attr">"eureka.client.register-with-eureka"</span>: <span class="literal">false</span>,</div><div class="line">                <span class="attr">"eureka.client.fetch-registry"</span>: <span class="literal">false</span>,</div><div class="line">                <span class="attr">"management.security.enabled"</span>: <span class="literal">false</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    ]</div><div class="line">&#125;</div></pre></td></tr></table></figure><h3 id="微服务网关-zuul"><a href="#微服务网关-zuul" class="headerlink" title="微服务网关 zuul"></a>微服务网关 zuul</h3><p>用serviceId代替URL，实现动态路由。</p><p>通过Zuul过滤器进行请求鉴权，拦截不合法请求，同时也可以实现API限流等操作。</p><h3 id="服务提供者-token-service"><a href="#服务提供者-token-service" class="headerlink" title="服务提供者 token-service"></a>服务提供者 token-service</h3><p>token认证服务，提供生成token和验证token的接口</p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@GetMapping</span>(<span class="string">"/token/generate/&#123;uid&#125;"</span>)</div><div class="line"><span class="function">String <span class="title">getToken</span><span class="params">(@PathVariable String uid)</span></span>;</div><div class="line"></div><div class="line"><span class="meta">@GetMapping</span>(<span class="string">"/token/verify"</span>)</div><div class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">verify</span><span class="params">(@RequestParam String token)</span></span>;</div></pre></td></tr></table></figure><h3 id="服务消费者-user-service"><a href="#服务消费者-user-service" class="headerlink" title="服务消费者 user-service"></a>服务消费者 user-service</h3><p>调用用户相关服务的时候，会消费token认证服务，使用Feign调用服务，通过Hystrix提供容错保护</p><p>向 <a href="http://localhost:4000/user-service/login" target="_blank" rel="noopener">http://localhost:4000/user-service/login</a> 发POST请求</p><p>登录或注册成功返回token</p><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"code"</span>: <span class="number">0</span>,</div><div class="line">    <span class="attr">"msg"</span>: <span class="string">"login success"</span>,</div><div class="line">    <span class="attr">"data"</span>: <span class="string">"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NjVhNWEyYy1hYzhhLTQxNDctYjI2Yy0zNTFlYTA0NjI4OGEiLCJleHAiOjE1MjA1OTMzODF9.NMUjrRk7MsAROuq1OLOUM9WOefgkZmg5_M_mjiSVa0Cz-SunY2ucgxEvOGdKW7U1AVteNVVtD1v_cQlwA_wREQ"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure><p>把token放在请求头，获取用户信息 <a href="http://localhost:4000/user-service/user/info" target="_blank" rel="noopener">http://localhost:4000/user-service/user/info</a></p><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"code"</span>: <span class="number">0</span>,</div><div class="line">    <span class="attr">"msg"</span>: <span class="string">"success"</span>,</div><div class="line">    <span class="attr">"data"</span>: &#123;</div><div class="line">        <span class="attr">"id"</span>: <span class="string">"765a5a2c-ac8a-4147-b26c-351ea046288a"</span>,</div><div class="line">        <span class="attr">"name"</span>: <span class="string">"aa"</span>,</div><div class="line">        <span class="attr">"sex"</span>: <span class="string">"boy"</span>,</div><div class="line">        <span class="attr">"img"</span>: <span class="string">"http://img.com/aa32.jpg"</span>,</div><div class="line">        <span class="attr">"age"</span>: <span class="number">20</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure><h3 id="服务管控-admin-server"><a href="#服务管控-admin-server" class="headerlink" title="服务管控 admin-server"></a>服务管控 admin-server</h3><p>打开 <a href="http://localhost:5033" target="_blank" rel="noopener">http://localhost:5033</a></p><p>进入服务管理界面，查看服务运行状态</p><p><img src="/pic/cloud/2.jpg" alt=""></p><p><img src="/pic/cloud/3.jpg" alt=""></p><h3 id="Zipkin-服务追踪"><a href="#Zipkin-服务追踪" class="headerlink" title="Zipkin 服务追踪"></a>Zipkin 服务追踪</h3><p>在 <a href="http://localhost:5500/zipkin/" target="_blank" rel="noopener">http://localhost:5500/zipkin/</a> 可以查看服务链路追踪</p><p><img src="/pic/cloud/4.jpg" alt=""></p><p>服务调用时间</p><p><img src="/pic/cloud/5.jpg" alt=""></p><p>调用详情</p><p><img src="/pic/cloud/6.jpg" alt=""></p><h2 id="项目源码"><a href="#项目源码" class="headerlink" title="项目源码"></a>项目源码</h2><p><a href="https://github.com/yunTerry/spring-cloud-netflix">https://github.com/yunTerry/spring-cloud-netflix</a></p></div><div><div id="wechat_subscriber" style="display:block;padding:10px 0;margin:20px auto;width:100%;text-align:center"><img id="wechat_subscriber_qcode" src="/pic/wx.jpg" alt="Terry wechat" style="width:200px;max-width:100%"><div>扫一扫关注我的微信公众号</div></div></div><div><div style="padding:10px 0;margin:20px auto;width:90%;text-align:center"><div></div><button id="rewardButton" disable="enable" onclick='var qr=document.getElementById("QR");"none"===qr.style.display?qr.style.display="block":qr.style.display="none"'><span>赏</span></button><div id="QR" style="display:none"><div id="wechat" style="display:inline-block"><img id="wechat_qr" src="/pic/wxp.png" alt="Terry WeChat Pay"><p>微信打赏</p></div><div id="alipay" style="display:inline-block"><img id="alipay_qr" src="/pic/alp.jpg" alt="Terry Alipay"><p>支付宝打赏</p></div></div></div></div><div></div><footer class="post-footer"><div class="post-tags"><a href="/tags/Spring-Cloud/" rel="tag"># Spring Cloud</a> <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a> <a href="/tags/服务发现/" rel="tag"># 服务发现</a> <a href="/tags/微服务/" rel="tag"># 微服务</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/microservice/" rel="next" title="聊聊微服务架构"><i class="fa fa-chevron-left"></i> 聊聊微服务架构</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"></div></div></footer></article><div class="post-spread"></div></div></div><div class="comments" id="comments"></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span> <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span> <span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">文章目录</li><li class="sidebar-nav-overview" data-target="site-overview">站点概览</li></ul><section class="site-overview sidebar-panel"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"><img class="site-author-image" itemprop="image" src="/pic/logo.jpg" alt="Terry"><p class="site-author-name" itemprop="name">Terry</p><p class="site-description motion-element" itemprop="description">Android & Java Developer</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"><a href="/archives"><span class="site-state-item-count">17</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"><a href="/categories/index.html"><span class="site-state-item-count">11</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"><a href="/tags/index.html"><span class="site-state-item-count">35</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="https://github.com/yunTerry" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i> GitHub</a></span></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Cloud微服务框架"><span class="nav-number">1.</span> <span class="nav-text">Spring Cloud微服务框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式微服务实践"><span class="nav-number">2.</span> <span class="nav-text">分布式微服务实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注册中心-eureka-server"><span class="nav-number">2.1.</span> <span class="nav-text">注册中心 eureka-server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置中心-config-server"><span class="nav-number">2.2.</span> <span class="nav-text">配置中心 config-server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#微服务网关-zuul"><span class="nav-number">2.3.</span> <span class="nav-text">微服务网关 zuul</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务提供者-token-service"><span class="nav-number">2.4.</span> <span class="nav-text">服务提供者 token-service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务消费者-user-service"><span class="nav-number">2.5.</span> <span class="nav-text">服务消费者 user-service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务管控-admin-server"><span class="nav-number">2.6.</span> <span class="nav-text">服务管控 admin-server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zipkin-服务追踪"><span class="nav-number">2.7.</span> <span class="nav-text">Zipkin 服务追踪</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目源码"><span class="nav-number">3.</span> <span class="nav-text">项目源码</span></a></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><div class="copyright">&copy; <span itemprop="copyrightYear">2018</span> <span class="with-love"><i class="fa fa-heart"></i> </span><span class="author" itemprop="copyrightHolder">Terry</span></div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script><script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script><script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script><script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script><script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script><script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script><script type="text/javascript">// Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    };
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function (res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function () {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function (data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if (title != '') {
+                  keywords.forEach(function (keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if (start < 0) {
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if (end > content.length) {
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            }
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              });
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          };
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    };
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function (e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      }
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function (e) {
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });</script></body></html>

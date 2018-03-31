@@ -1,0 +1,314 @@
+<!DOCTYPE html><html class="theme-next pisces use-motion" lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"><link href="//fonts.googleapis.com/css?family=source code pro:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css"><meta name="keywords" content="SpringBoot,运维,云计算,Linux,Shell,python,"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1"><meta name="description" content="云计算是IT行业的一大变革，未来云计算将成为商业社会的基础设施，国内阿里、腾讯、京东、美团等一众互联网公司都提供云服务，玩玩服务器变得非常容易了，本文简单地总结一下从项目打包到部署运维的经验。"><meta name="keywords" content="SpringBoot,运维,云计算,Linux,Shell,python"><meta property="og:type" content="article"><meta property="og:title" content="云服务器的自动化部署与运维"><meta property="og:url" content="https://github.com/yunTerry/server-auto/index.html"><meta property="og:site_name" content="Terry"><meta property="og:description" content="云计算是IT行业的一大变革，未来云计算将成为商业社会的基础设施，国内阿里、腾讯、京东、美团等一众互联网公司都提供云服务，玩玩服务器变得非常容易了，本文简单地总结一下从项目打包到部署运维的经验。"><meta property="og:locale" content="zh-Hans"><meta property="og:updated_time" content="2018-02-13T02:26:39.575Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="云服务器的自动化部署与运维"><meta name="twitter:description" content="云计算是IT行业的一大变革，未来云计算将成为商业社会的基础设施，国内阿里、腾讯、京东、美团等一众互联网公司都提供云服务，玩玩服务器变得非常容易了，本文简单地总结一下从项目打包到部署运维的经验。"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Pisces",sidebar:{position:"left",display:"post",offset:12,offset_float:0,b2t:!1,scrollpercent:!1,onmobile:!1},fancybox:!0,motion:!0,duoshuo:{userId:"undefined",author:"博主"},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><link rel="canonical" href="https://github.com/yunTerry/server-auto/"><title>云服务器的自动化部署与运维 | Terry</title></head><body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans"><div class="container sidebar-position-left page-post-detail"><div class="headband"></div><header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-wrapper"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Terry</span> <span class="logo-line-after"><i></i></span></a></div><p class="site-subtitle">Android、云计算</p></div><div class="site-nav-toggle"><button><span class="btn-bar"></span> <span class="btn-bar"></span> <span class="btn-bar"></span></button></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br>分类</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i><br>关于</a></li><li class="menu-item menu-item-search"><a href="javascript:" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br>搜索</a></li></ul><div class="site-search"><div class="popup search-popup local-search-popup"><div class="local-search-header clearfix"><span class="search-icon"><i class="fa fa-search"></i> </span><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span><div class="local-search-input-wrapper"><input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input"></div></div><div id="local-search-result"></div></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://github.com/yunTerry/server-auto/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="Terry"><meta itemprop="description" content=""><meta itemprop="image" content="/pic/logo.jpg"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Terry"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">云服务器的自动化部署与运维</h1><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i> </span><span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-15T09:45:00+08:00">2017-09-15 </time></span><span class="post-category"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-folder-o"></i> </span><span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span></span></div></header><div class="post-body" itemprop="articleBody"><p>云计算是IT行业的一大变革，未来云计算将成为商业社会的基础设施，国内阿里、腾讯、京东、美团等一众互联网公司都提供云服务，玩玩服务器变得非常容易了，本文简单地总结一下从项目打包到部署运维的经验。<br><a id="more"></a></p><h2 id="项目打包"><a href="#项目打包" class="headerlink" title="项目打包"></a>项目打包</h2><p>基于SpringBoot开发的项目一般使用maven或gradle来管理，项目打包成jar可执行文件都很简单：</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># maven项目打包</span></div><div class="line">mvn clean package</div><div class="line"></div><div class="line"><span class="comment"># gradle项目打包</span></div><div class="line">gradlew build</div></pre></td></tr></table></figure><p>实际中很多时候，比如由于数据库配置文件的更改导致测试无法通过，打包就无法顺利完成，这时我们希望不测试直接打包，使用<br></p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mvn clean package  -Dmaven.test.skip=<span class="literal">true</span></div></pre></td></tr></table></figure><p></p><p>这条命令可以跳过测试，直接打包，效率提升不少。</p><h2 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h2><p>使用Xftp或WinSCP等工具登录云主机，把生成的jar文件上传到服务器，在Xshell中执行:<br></p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -jar /root/app.jar</div></pre></td></tr></table></figure><p></p><p>就可以在前台启动项目，这种方式只要控制台关闭，服务就关闭了，通常用来测试项目是否正常运行，正式部署一般用nohup命令使服务在后台运行:<br></p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nohup java -jar /root/app.jar &amp;</div></pre></td></tr></table></figure><p></p><p>部署的时候我们临时指定服务运行的端口号：<br></p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -jar app.jar --server.port=2030</div></pre></td></tr></table></figure><p></p><p>也可以让它读取不同的配置文件：<br></p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -jar app.jar --spring.profiles.active=dev</div></pre></td></tr></table></figure><p></p><p>或者直接使用外部的配置文件运行：<br></p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -jar -Dspring.config.location=app.properties app.jar</div></pre></td></tr></table></figure><p></p><h2 id="关闭和重启服务"><a href="#关闭和重启服务" class="headerlink" title="关闭和重启服务"></a>关闭和重启服务</h2><p>程序运行在服务器后台，通过命令行进行关闭和重启管理服务</p><h3 id="用进程管理"><a href="#用进程管理" class="headerlink" title="用进程管理"></a>用进程管理</h3><p>简单的方式就是通过应用进程来管理，我们知道程序运行的端口号，通过端口号查询进程ID，就可以直接kill掉:</p><p>例如使用<code>lsof -i:5032</code>或<code>netstat -anp|grep 5032</code>可以拿到5032端口的pid，然后直接<code>kill pid</code>即可关闭该进程，启动再使用上面的<code>java -jar</code>命令即可。</p><p>部署多个服务时，可以写一个 Shell 脚本来管理：<br></p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line">ser1=2001</div><div class="line">ser2=2002</div><div class="line"><span class="comment"># 启动服务</span></div><div class="line"><span class="built_in">read</span> -p <span class="string">"start ser1:"</span>  val1</div><div class="line"><span class="keyword">if</span> [ <span class="string">"<span class="variable">$val1</span>"</span> = <span class="string">"y"</span> ];</div><div class="line"><span class="keyword">then</span></div><div class="line">nohup java -jar /root/ser1-1.0.jar &amp;</div><div class="line"><span class="built_in">echo</span> <span class="string">"ser1 started"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"><span class="built_in">read</span> -p <span class="string">"start ser2:"</span>  val2</div><div class="line"><span class="keyword">if</span> [ <span class="string">"<span class="variable">$val2</span>"</span> = <span class="string">"y"</span> ];</div><div class="line"><span class="keyword">then</span></div><div class="line">nohup java -jar /root/ser2-1.0.jar &amp;</div><div class="line"><span class="built_in">echo</span> <span class="string">"ser2 started"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"><span class="comment"># 关闭服务</span></div><div class="line"><span class="built_in">read</span> -p <span class="string">"stop ser1:"</span>  val3</div><div class="line"><span class="keyword">if</span> [ <span class="string">"<span class="variable">$val3</span>"</span> = <span class="string">"y"</span> ];</div><div class="line"><span class="keyword">then</span></div><div class="line"><span class="built_in">kill</span> -9 $(netstat -anp|grep <span class="variable">$ser1</span>|awk <span class="string">'&#123;printf $7&#125;'</span>|cut -d/ -f1)</div><div class="line"><span class="built_in">echo</span> <span class="string">"ser1 stopped"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"><span class="built_in">read</span> -p <span class="string">"stop ser2:"</span>  val4</div><div class="line"><span class="keyword">if</span> [ <span class="string">"<span class="variable">$val4</span>"</span> = <span class="string">"y"</span> ];</div><div class="line"><span class="keyword">then</span></div><div class="line"><span class="built_in">kill</span> -9 $(netstat -anp|grep <span class="variable">$ser2</span>|awk <span class="string">'&#123;printf $7&#125;'</span>|cut -d/ -f1)</div><div class="line"><span class="built_in">echo</span> <span class="string">"ser2 stopped"</span></div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure><p></p><h3 id="注册为服务"><a href="#注册为服务" class="headerlink" title="注册为服务"></a>注册为服务</h3><p>除了用进程来管理，另一种更优雅的方式就是通过Linux的软连接把应用注册为服务，然后通过start、stop这样的命令进行管理。</p><p>软连接就类似于Windows上的快捷方式，在<code>/etc/init.d/</code>文件夹中创建一个软连接，通过这个软连接来管理应用启动和停止：</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 为ser1-1.0.jar创建软连接</span></div><div class="line">ln -s /root/ser1-1.0.jar /etc/init.d/ser1</div><div class="line"></div><div class="line"><span class="comment"># 赋予执行权限</span></div><div class="line">chmod +x /etc/init.d/ser1</div><div class="line"></div><div class="line"><span class="comment"># 启动应用</span></div><div class="line">/etc/init.d/ser1 start</div><div class="line"><span class="comment"># 关闭或重启</span></div><div class="line">/etc/init.d/ser1 stop|restart</div></pre></td></tr></table></figure><h2 id="Python自动化部署"><a href="#Python自动化部署" class="headerlink" title="Python自动化部署"></a>Python自动化部署</h2><p>前面我们使用Xshell和Xftp等可视化的工具可以很方便地把jar文件上传到服务器，然后运行起来，如果你觉得这些工具还是很繁琐，可以使用Python脚本实现一键自动上传和部署。</p><p>Python提供了一个<a href="https://github.com/paramiko/paramiko">paramiko</a>库，能够支持SSH和SFTP协议，可以取代Xshell和Xftp，下面是把本机的jar文件上传到服务器并运行的Python脚本：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># coding=utf-8</span></div><div class="line"><span class="keyword">import</span> threading</div><div class="line"><span class="keyword">import</span> paramiko</div><div class="line"></div><div class="line">IP = <span class="string">'106.14.19.127'</span></div><div class="line">user = <span class="string">'root'</span></div><div class="line">password = <span class="string">'server-pwd'</span></div><div class="line"></div><div class="line">local_jar = <span class="string">'/target/ser1-1.0.jar'</span></div><div class="line">server_jar = <span class="string">'/root/ser1-1.0.jar'</span></div><div class="line">server_property = <span class="string">'/root/ser1.properties'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">execute_cmds</span><span class="params">(ip, name, pwd, cmd)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        ssh = paramiko.SSHClient()</div><div class="line">        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())</div><div class="line">        ssh.connect(ip, <span class="number">22</span>, name, pwd, timeout=<span class="number">5</span>)</div><div class="line">        <span class="keyword">print</span> <span class="string">'连接成功'</span></div><div class="line">        sftp = ssh.open_sftp()</div><div class="line">        <span class="keyword">print</span> <span class="string">'正在上传...'</span></div><div class="line">        sftp.put(local_jar, server_jar)</div><div class="line">        <span class="keyword">print</span> <span class="string">'jar上传成功'</span></div><div class="line">        <span class="keyword">for</span> m <span class="keyword">in</span> cmd:</div><div class="line">            <span class="keyword">print</span> m</div><div class="line">            stdin, stdout, stderr = ssh.exec_command(m)</div><div class="line">            out = stdout.readlines()</div><div class="line">            <span class="keyword">for</span> o <span class="keyword">in</span> out:</div><div class="line">                <span class="keyword">print</span> o,</div><div class="line">        <span class="keyword">print</span> <span class="string">'运行成功'</span></div><div class="line">        ssh.close()</div><div class="line">        <span class="keyword">print</span> <span class="string">'关闭连接'</span></div><div class="line">    <span class="keyword">except</span> Exception, error:</div><div class="line">        <span class="keyword">print</span> <span class="string">'错误:  %s'</span> % (error)</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    <span class="keyword">print</span> <span class="string">'Start deploying %s to server %s'</span> % (server_jar, IP)</div><div class="line">    cmd = [</div><div class="line">        <span class="string">'echo Start spring...'</span>,</div><div class="line">        <span class="string">'nohup java -jar -Dspring.config.location='</span> + server_property + <span class="string">' '</span> + server_jar + <span class="string">' &amp;'</span>,</div><div class="line">        <span class="string">'echo All done.'</span></div><div class="line">    ]</div><div class="line">    a = threading.Thread(target=execute_cmds, args=(IP, user, password, cmd))</div><div class="line">    a.start()</div></pre></td></tr></table></figure></div><div><div id="wechat_subscriber" style="display:block;padding:10px 0;margin:20px auto;width:100%;text-align:center"><img id="wechat_subscriber_qcode" src="/pic/wx.jpg" alt="Terry wechat" style="width:200px;max-width:100%"><div>扫一扫关注我的微信公众号</div></div></div><div><div style="padding:10px 0;margin:20px auto;width:90%;text-align:center"><div></div><button id="rewardButton" disable="enable" onclick='var qr=document.getElementById("QR");"none"===qr.style.display?qr.style.display="block":qr.style.display="none"'><span>赏</span></button><div id="QR" style="display:none"><div id="wechat" style="display:inline-block"><img id="wechat_qr" src="/pic/wxp.png" alt="Terry WeChat Pay"><p>微信打赏</p></div><div id="alipay" style="display:inline-block"><img id="alipay_qr" src="/pic/alp.jpg" alt="Terry Alipay"><p>支付宝打赏</p></div></div></div></div><div></div><footer class="post-footer"><div class="post-tags"><a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a> <a href="/tags/运维/" rel="tag"># 运维</a> <a href="/tags/云计算/" rel="tag"># 云计算</a> <a href="/tags/Linux/" rel="tag"># Linux</a> <a href="/tags/Shell/" rel="tag"># Shell</a> <a href="/tags/python/" rel="tag"># python</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/nginx-lb/" rel="next" title="Nginx代理的多端口实例负载均衡"><i class="fa fa-chevron-left"></i> Nginx代理的多端口实例负载均衡</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"><a href="/zuul-rate-limit/" rel="prev" title="Spring Cloud Zuul微服务网关的API限流">Spring Cloud Zuul微服务网关的API限流 <i class="fa fa-chevron-right"></i></a></div></div></footer></article><div class="post-spread"></div></div></div><div class="comments" id="comments"></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span> <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span> <span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">文章目录</li><li class="sidebar-nav-overview" data-target="site-overview">站点概览</li></ul><section class="site-overview sidebar-panel"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"><img class="site-author-image" itemprop="image" src="/pic/logo.jpg" alt="Terry"><p class="site-author-name" itemprop="name">Terry</p><p class="site-description motion-element" itemprop="description">Android & Java Developer</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"><a href="/archives"><span class="site-state-item-count">17</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"><a href="/categories/index.html"><span class="site-state-item-count">11</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"><a href="/tags/index.html"><span class="site-state-item-count">35</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="https://github.com/yunTerry" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i> GitHub</a></span></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#项目打包"><span class="nav-number">1.</span> <span class="nav-text">项目打包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动服务"><span class="nav-number">2.</span> <span class="nav-text">启动服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关闭和重启服务"><span class="nav-number">3.</span> <span class="nav-text">关闭和重启服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#用进程管理"><span class="nav-number">3.1.</span> <span class="nav-text">用进程管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注册为服务"><span class="nav-number">3.2.</span> <span class="nav-text">注册为服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python自动化部署"><span class="nav-number">4.</span> <span class="nav-text">Python自动化部署</span></a></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><div class="copyright">&copy; <span itemprop="copyrightYear">2018</span> <span class="with-love"><i class="fa fa-heart"></i> </span><span class="author" itemprop="copyrightHolder">Terry</span></div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script><script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script><script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script><script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script><script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script><script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script><script type="text/javascript">// Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    };
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function (res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function () {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function (data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if (title != '') {
+                  keywords.forEach(function (keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if (start < 0) {
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if (end > content.length) {
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            }
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              });
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          };
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    };
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function (e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      }
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function (e) {
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });</script></body></html>
